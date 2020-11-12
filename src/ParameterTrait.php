@@ -164,7 +164,7 @@ trait ParameterTrait
             },
             'algorithm' => function ($value): string {
                 $value = mb_strtolower($value);
-                Assertion::inArray($value, hash_algos(), ('The "'.$value.'" digest is not supported.', $value));
+                Assertion::inArray($value, hash_algos(), ('The "'.$value.'" digest is not supported.'));
 
                 return $value;
             },
