@@ -16,7 +16,6 @@ namespace OTPHP;
 use Assert\Assertion;
 use InvalidArgumentException;
 use ParagonIE\ConstantTime\Base32;
-use function Safe\sprintf;
 
 trait ParameterTrait
 {
@@ -125,7 +124,7 @@ trait ParameterTrait
             return $this->getParameters()[$parameter];
         }
 
-        throw new InvalidArgumentException(sprintf('Parameter "%s" does not exist', $parameter));
+        throw new InvalidArgumentException('Parameter "'.$parameter.'" does not exist');
     }
 
     public function setParameter(string $parameter, $value): void
@@ -165,7 +164,7 @@ trait ParameterTrait
             },
             'algorithm' => function ($value): string {
                 $value = mb_strtolower($value);
-                Assertion::inArray($value, hash_algos(), sprintf('The "%s" digest is not supported.', $value));
+                Assertion::inArray($value, hash_algos(), ('The "'.$value.'" digest is not supported.', $value));
 
                 return $value;
             },

@@ -16,8 +16,6 @@ namespace OTPHP;
 use Assert\Assertion;
 use ParagonIE\ConstantTime\Base32;
 use RuntimeException;
-use function Safe\ksort;
-use function Safe\sprintf;
 
 abstract class OTP implements OTPInterface
 {
@@ -69,7 +67,8 @@ abstract class OTP implements OTPInterface
             }
         }
 
-        ksort($options);
+        if(!ksort($options))
+          throw new \Exception('Failed to ksort');
     }
 
     /**
@@ -84,7 +83,12 @@ abstract class OTP implements OTPInterface
         $this->filterOptions($options);
         $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options));
 
-        return sprintf('otpauth://%s/%s?%s', $type, rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$label), $params);
+        $str = sprintf('otpauth://%s/%s?%s', $type, rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$label), $params);
+
+        if($str === false)
+          throw new \RuntimeException('Failed to sprintf ><');
+
+        return $str;
     }
 
     private function getDecodedSecret(): string
